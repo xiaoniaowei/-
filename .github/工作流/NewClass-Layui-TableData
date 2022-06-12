@@ -1,0 +1,21 @@
+public class layuitabledata<T>
+    {
+        /// <summary>
+        /// 数据状态码 -- 可以不设置
+        /// </summary>
+        public int code { get; set; }
+
+        /// <summary>
+        /// 状态信息 -- 可以不设置
+        /// </summary>
+        public string msg { get; set; }
+
+        /// <summary>
+        /// 总行数
+        /// </summary>
+        public int count { get; set; }
+        /// <summary>
+        /// 数据
+        /// </summary>
+        public List<T> data { get; set; }
+    }
