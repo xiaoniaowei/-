@@ -1,0 +1,15 @@
+public class NpoiStream:MemoryStream
+    {
+        public NpoiStream()
+        {
+            AllowClose = true;
+        }
+        public bool AllowClose { get; set; }
+        public override void Close()
+        {
+            if (AllowClose)
+            {
+                base.Close();
+            }
+        }
+    }
