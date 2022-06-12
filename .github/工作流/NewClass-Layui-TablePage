@@ -1,0 +1,27 @@
+public class layuitablepage
+    {
+        /// <summary>
+        /// page 代表当前页码
+        /// </summary>
+        public int page { get; set; }
+        /// <summary>
+        /// limit 代表每页数据量
+        /// </summary>
+        public int limit { get; set; }
+        /// <summary>
+        /// 分页开始序号
+        /// </summary>
+        /// <returns></returns>
+        public int GetStartIndex()
+        {
+            return (page - 1) * limit;
+        }
+        /// <summary>
+        /// 分页结束序号
+        /// </summary>
+        /// <returns></returns>
+        public int GetEndIndex()
+        {
+            return page * limit - 1;
+        }
+    }
