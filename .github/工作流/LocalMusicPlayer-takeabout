@@ -1,6 +1,8 @@
 该项目基于.NET Framework 的MVC架构的小创作，有使用到NPOI
 LocalMusicPlayer-Csharp：将内容复制，粘贴到所用到的控制器文件里
 LocalMusicPlayer-HTML：将内容复制，粘贴到所用到的HTML文件里
+LocalMusicPlayer-CSS:将内容复制，粘贴到所用到的CSS文件里
 NewClass文件:layui-tablepage用于接收layui插件请求的参数
              layui-tabledata用于返回layui插件请求的数据
-             
+             NPOIstream用于控制NPOI.XSSFWorkBook的流异常关闭问题
+             MusicData用于接收Excel表的数据
