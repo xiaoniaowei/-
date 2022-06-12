@@ -1,0 +1,344 @@
+/*MusicPlay.css*/
+* {
+    margin: 0;
+    padding: 0;
+}
+
+b{
+    cursor:pointer;
+}
+
+.Container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    align-items: center;
+}
+
+.rightview {
+    flex-grow: 1;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+    color: whitesmoke;
+    background: url(24462193c0b348313fc1e699d688295c.jpeg);
+    align-items: flex-start;
+    align-content: flex-start;
+    box-sizing: border-box;
+    justify-content: center;
+}
+
+.ChooseView {
+    max-width: 1000px;
+    width: 100%;
+    height: 100%;
+    box-shadow: #3c8fff 0 0 20px 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: flex-start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    background: #3b4554;
+    position:relative;
+    justify-content:center;
+}
+
+.contorlrow {
+    width: 100%;
+    height: 30px;
+    padding: 5px 10px;
+    background: #485466;
+    display: flex;
+    align-items: center;
+}
+
+.pagetitle {
+    color: #ff6a97;
+}
+
+.t1 {
+    font-size: 20px;
+    font-weight: bold;
+    font-family: fangsong;
+    font-style: oblique;
+}
+
+.t2 {
+    font-size: 12px;
+}
+
+.contorl {
+    margin-left: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.icon {
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.amplify{
+    position:relative;
+}
+
+.MusicPathBox {
+    position: absolute;
+    display: block;
+    width: 110px;
+    left: -39px;
+    top: 25px;
+    text-align: center;
+    z-index:1;
+    font-weight:normal;
+    height:0;
+    overflow:hidden;
+    transition:height 0.5s ease;
+}
+
+.autoheight{
+    height:auto;
+}
+
+.amplify:hover {
+    background: #636d7d;
+}
+
+.PathList {
+    display: flex;
+    flex-wrap: wrap;
+    align-items:center;
+    justify-content:center;
+}
+
+.PathTopTip {
+    font-size: 18px;
+    display:inline-block;
+    height:16px;
+}
+
+.SetBox{
+    border-radius:5px;
+    overflow:hidden;
+}
+
+.SetUrl {
+    display: block;
+    background: #fff;
+    padding: 10px 5px;
+    color: black;
+}
+
+.SetUrl:hover{
+    color:#008bb9;
+}
+
+.shrink:hover {
+    background: #636d7d;
+}
+
+.close:hover {
+    background: #e43434;
+}
+
+.ListView {
+    width: 100%;
+    height: 700px;
+    margin: 20px 20px 0;
+    background: #414d5d;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.RowBar {
+    display: flex;
+    height: 30px;
+    align-items: center;
+}
+
+.choose {
+    flex-grow: 1;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: cursive;
+    font-size: 18px;
+}
+
+.NowC {
+    background: #4e5c6f;
+}
+
+.List {
+    height: 660px;
+    background: #4e5c6f;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.addpathbox {
+    position: absolute;
+    top: 100px;
+    background: #738193;
+    z-index: 1;
+    border-radius: 5px;
+    display:none;
+}
+.headrow {
+    padding: 10px 20px;
+    display: flex;
+    border-bottom: 1px solid #5b6b81;
+}
+.headrow b{
+    margin-left:auto;
+}
+.headrow b:hover{
+    color:red;
+}
+.PathBox{
+    padding:10px 20px;
+    display:flex;
+    position:relative;
+}
+.LookPath {
+    border: none;
+    margin: 0;
+    padding: 2px;
+    height: 25px;
+    width:180px;
+    color:#000 !important;
+}
+.Pathbtn {
+    font-size: 12px;
+    width: 58px;
+    height: 29px;
+    border: none;
+    background: #4bc1ff;
+    color: white;
+}
+.PlayerContorlBox {
+    display: flex;
+    flex-grow: 1;
+    margin: 10px 20px;
+    height: 75px;
+    box-sizing: border-box;
+    background: #4e5c6f;
+    border-radius: 20px;
+}
+.NowPlayerMessage {
+    width: 500px;
+    box-sizing: border-box;
+    padding: 10px 20px;
+}
+.MusicName {
+    padding: 5px;
+    flex-grow: 1;
+    height: 35px;
+    max-width: 100%;
+    overflow: hidden;
+    display:flex;
+    align-items:center;
+}
+.ProgressBar {
+    display: flex;
+    justify-content: flex-end;
+    height: 3px;
+    background: #5cff5c;
+}
+.whitebar {
+    width: 100%;
+    min-width: 0%;
+    max-width: 100%;
+    background: #5b6b81;
+}
+.Name{
+    flex-grow:1;
+}
+.MusicContorl{
+    display:flex;
+}
+.PlayerBtn {
+    width: 30px;
+    height: 22px;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+}
+.left, .right, .player {
+    font-size: 20px;
+}
+.left, .right {
+    font-family: fangsong;
+}
+.stop {
+    font-size: 18px;
+}
+.PlayerBtn:hover {
+    color: #4dff5f;
+}
+.pushName {
+    flex-grow: 1;
+    text-overflow: ellipsis;
+}
+.StateRow{
+    display:flex;
+    width:100%;
+    height:100%;
+}
+.state {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+}
+.StateIcon {
+    width: 16px;
+    height: 16px;
+    font-style: normal;
+    line-height: 16px;
+    font-size: 16px;
+}
+.storeicon {
+    font-size: 20px;
+}
+.playicon:hover {
+    color: #1fb5ff;
+}
+.loveicon:hover {
+    font-size: 16px;
+}
+.storeicon:hover {
+    font-size: 20px;
+}
+.recoveryicon:hover {
+    font-size: 16px;
+}
+.yellow{
+    color:yellow;
+}
+.red{
+    color:red;
+}
+.MengMei {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: url(352ba40408f7f8479457dba717c27adb.jpeg) no-repeat center center;
+    background-size: 50px;
+    z-index: 2;
+}
+.MusicBoxSize {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    bottom: 50px;
+}
