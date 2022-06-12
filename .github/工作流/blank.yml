@@ -1,0 +1,400 @@
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Home</title>
+    <link href="~/plugins/MusicPlay.css" rel="stylesheet" />
+    <link href="~/plugins/layui/css/layui.css" rel="stylesheet" />
+    <link rel="icon" href="~/plugins/24462193c0b348313fc1e699d688295c.jpeg" type="image/x-icon">
+</head>
+<body>
+    <style>
+        .layui-form{
+            user-select:none;
+            min-width:100%;
+        }
+        .layui-table, .layui-table tbody tr:hover, .layui-table thead tr, .layui-table-click, .layui-table-header, .layui-table-hover, .layui-table-mend, .layui-table-patch, .layui-table-tool, .layui-table-total, .layui-table-total tr, .layui-table[lay-even] tr:nth-child(even) {
+            background-color: transparent !important;
+            color: white;
+        }
+        .layui-table td, .layui-table th, .layui-table-col-set, .layui-table-fixed-r, .layui-table-grid-down, .layui-table-header, .layui-table-page, .layui-table-tips-main, .layui-table-tool, .layui-table-total, .layui-table-view, .layui-table[lay-skin=line], .layui-table[lay-skin=row]{
+            border-color:#6f7781;
+        }
+        .layui-table-body .layui-none {
+            color: white;
+        }
+        .layui-laypage a, .layui-laypage span {
+            color: white;
+        }
+        .layui-laypage select {
+            background: #4e5c6f;
+            border: none;
+            color: white
+        }
+        .layui-laypage button, .layui-laypage input {
+            background-color: #5b6b81;
+            border-color: #5b6b81;
+            color: white
+        }
+        .layui-table-grid-down{
+            display:none;
+        }
+    </style>
+    <div class="Container">
+        <div class="rightview">
+            <div class="ChooseView MusicBoxSize" id="ChooseView">
+                <div class="MengMei"></div>
+                <div class="addpathbox" id="addpathbox">
+                    <div class="headrow">
+                        <span>
+                            添加音乐路径
+                        </span>
+                        <b onclick="ClosePathBox()">&#10006;</b>
+                    </div>
+                    <div class="PathBox">
+                        <input type="text" id="NewPath" class="LookPath" value="" placeholder="文件所在的路径"/>
+                        <button class="Pathbtn" onclick="UpPath()">确定</button>
+                    </div>
+                </div>
+                <div class="contorlrow">
+                    <div class="pagetitle">
+                        <span class="t1">LocalMusic</span>
+                        <span class="t2">——by@chm</span>
+                    </div>
+                    <div class="contorl">
+                        <b class="icon shrink" onclick="Resize()">&#8211;</b>
+                        <b class="icon amplify" onclick="OpenMusicPath()">
+                            &#10033;
+                            @*音乐路径展示*@
+                            <span class="MusicPathBox" id="MusicPathBox">
+                                <span class="PathList">
+                                    <span class="PathTopTip">&#9650;</span>
+                                    <span class="SetBox">
+                                        <span class="SetUrl" onclick="AddMusicPath()">导入音乐</span>
+                                    </span>
+                                </span>
+                            </span>
+                        </b>
+                        <b class="icon close" onclick="Resize(true)">&#10005;</b>
+                    </div>
+                </div>
+                <div class="ListView">
+                    <div class="RowBar">
+                        <div class="choose NowC" onclick="ReloadTable('GetMusicList',0)">本地音乐</div>
+                        <div class="choose" onclick="ReloadTable('GetMusicList',1)">喜欢列表</div>
+                        <div class="choose" onclick="ReloadTable('GetMusicList',2)">收藏列表</div>
+                        <div class="choose" onclick="ReloadTable('GetRmMusicList',3)">回收站</div>
+                    </div>
+                    <div class="List">
+                        <div id="MusicList" lay-filter="laytable" style="display:none"></div>
+                    </div>
+                </div>
+                <audio id="Music" controls="controls" style="display:none;">
+                    <source src="" type="audio/mp3" />
+                </audio>
+                <div class="PlayerContorlBox">
+                    <div class="NowPlayerMessage">
+                        <div class="MusicName">
+                            <span class="Name" id="Name">
+                                <span class="tip">
+                                    正在播放：
+                                </span>
+                                <span class="pushName" id="pushName">
+
+                                </span>
+                            </span>
+                            <div class="MusicContorl">
+                                <b class="PlayerBtn left" onclick="Previous()">&lt;</b>
+                                <b class="PlayerBtn player" onclick="PlayInList()">&#9658;</b>
+                                <b class="PlayerBtn stop" onclick="StopMusic()">||</b>
+                                <b class="PlayerBtn right" onclick="Next()">&gt;</b>
+                            </div>
+                        </div>
+                        <div class="ProgressBar">
+                            <div class="whitebar" id="whitebar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/plugins/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="~/plugins/MusicPlay.js"></script>
+    <script src="~/plugins/layui/layui.js"></script>
+    <script>
+        //--------------------------------------Start---参数区-----------------------------------------//
+        let layer = layui.layer, laytable = layui.table;
+        let NowPlay, PlayerList = [], MusicPlaying, runlong;
+        let Wd = $("#whitebar").width();
+        //---------------------------------------End---参数区-----------------------------------------//
+        //---------------------------------------Start---表格事件区-----------------------------------------//
+        function LoveThis(index) {
+            $(".loveicon").eq(index).toggleClass("red");
+            let has = $(".loveicon").hasClass("red");
+            if (has) {
+                ChangeState(true, "love", index);
+            } else {
+                ChangeState(false, "love", index);
+            }
+        }
+        function StoreThis(index) {
+            $(".storeicon").eq(index).toggleClass("yellow");
+            let has = $(".storeicon").hasClass("yellow");
+            if (has) {
+                ChangeState(true, "store", index);
+            } else {
+                ChangeState(false, "store", index);
+            }
+        }
+        function RemoveThis(index) {
+            $(".recoveryicon").eq(index).toggleClass("red");
+            let has = $(".recoveryicon").hasClass("red");
+            if (has) {
+                ChangeState(true, "recovery", index);
+            } else {
+                ChangeState(false, "recovery", index);
+            }
+        }
+        function ChangeState(state, type, index) {
+            let page = $(".layui-laypage-next").data("page");
+            let xhr = new XMLHttpRequest();
+            let formdata = new FormData();
+            formdata.append("State", state);
+            formdata.append("Type", type);
+            formdata.append("Rowindex", (page - 2) * 14 + index + 1);
+            xhr.open("POST", 'MusicState');
+            xhr.responseType = "text";
+            xhr.onload = function (e) {
+                if (type == "recovery") {
+                    ReloadTable();
+                    GetMusicList();
+                } else {
+                    layer.msg(this.responseText);
+                }
+            };
+            xhr.send(formdata);
+        }
+        //---------------------------------------End---表格事件区-----------------------------------------//
+        //---------------------------------------Start---配置生成区-----------------------------------------//
+        function OpenMusicPath() {
+            $("#MusicPathBox").toggleClass("autoheight");
+        }
+        function AddMusicPath() {
+            $("#addpathbox").show();
+        }
+        function UpPath() {
+            let NewPath = $("#NewPath").val();
+            $.post("AddPath", { MusicPath: NewPath }, function (val) {
+                layer.msg(val);
+                ReloadTable(tablestyle);
+            });
+        }
+        function ClosePathBox() {
+            $("#addpathbox").hide();
+        };
+        //---------------------------------------End---配置生成区-----------------------------------------//
+        //---------------------------------------Start---音乐播放区-----------------------------------------//
+        //通过列表播放
+        function PlayIndex(index) {
+            if (NowPlay != index) {
+                if (MusicPlaying != undefined) {
+                    clearInterval(MusicPlaying);
+                    $("#whitebar").width(Wd);
+                };
+                let page = $(".layui-laypage-next").data("page");
+                NowPlay = (page - 2) * 14 + index;
+                $("#pushName").text(PlayerList[NowPlay].MusicName);
+                let url = PlayerList[NowPlay].MusicUrl;
+                Playing(url);
+            }
+        };
+        //媒体播放事件
+        function Playing(url) {
+            let formdata = new FormData();
+            formdata.append("strPath", url);
+            //创建XMLHttpRequest对象
+            var xhr = new XMLHttpRequest();
+            //配置请求方式、请求地址以及是否同步
+            xhr.open('POST', 'BlackByte', true);
+            //设置请求结果类型为blob
+            xhr.responseType = 'blob';
+            //请求成功回调函数
+            xhr.onload = function (e) {
+                if (this.status == 200) {//请求成功
+                    //获取blob对象
+                    var blob = this.response;
+                    //获取blob对象地址，并把值赋给容器
+                    $("#Music").attr("src", URL.createObjectURL(blob));
+                    var myVid = document.getElementById("Music");
+                    if (myVid != null) {
+                        myVid.load();
+                        myVid.oncanplay = function () {
+                            myVid.play();
+                            let SingeLong = Math.ceil(myVid.duration);
+                            runlong = Wd / SingeLong;
+                            MusicPlaying = setInterval(() => {
+                                let CW = $("#whitebar").width();
+                                $("#whitebar").width(CW - runlong);
+                            }, 1000);
+                        }
+                        myVid.onended = function () {
+                            clearInterval(MusicPlaying);
+                            if ((NowPlay + 1) == (PlayerList.length - 1)) {
+                                NowPlay = 0;
+                            } else {
+                                NowPlay++;
+                            }
+                            PlayInList("Next")
+                            $("#whitebar").width(Wd);
+                        }
+                    }
+                }
+            };
+            xhr.send(formdata);
+        }
+        //上一首
+        function Previous() {
+            if (NowPlay == undefined) {
+                NowPlay = 0;
+            }
+            if ((NowPlay - 1) >= 0) {
+                clearInterval(MusicPlaying);
+                NowPlay--;
+                PlayInList("Next");
+                $("#whitebar").width(Wd);
+            } else {
+                layer.msg("已经是第一首了")
+            }
+        }
+        //播放
+        function PlayInList(Next) {
+            if (Next != undefined) {
+                let url = PlayerList[NowPlay].MusicUrl;
+                $("#pushName").text(PlayerList[NowPlay].MusicName);
+                Playing(url)
+            } else {
+                $("#Music").get(0).play();
+                MusicPlaying = setInterval(() => {
+                    let CW = $("#whitebar").width();
+                    $("#whitebar").width(CW - runlong);
+                }, 1000);
+            }
+        };
+        //停止
+        function StopMusic() {
+            if (MusicPlaying != undefined) {
+                $("#Music").get(0).pause();
+                clearInterval(MusicPlaying);
+            }
+        }
+        //下一首
+        function Next() {
+            if (NowPlay == undefined) {
+                NowPlay = 0;
+            }
+            if ((NowPlay + 1) <= (PlayerList.length - 1)) {
+                clearInterval(MusicPlaying);
+                NowPlay++;
+                PlayInList("Next")
+                $("#whitebar").width(Wd);
+            } else {
+                layer.msg("已经是最后一首了")
+            }
+        }
+                //---------------------------------------End---音乐播放区-----------------------------------------//
+        //---------------------------------------Start---App大小-----------------------------------------//
+        function Resize(stop) {
+            $(".ChooseView").addClass("MusicBoxSize");
+            if (stop) {
+                StopMusic();
+            }
+            $(".MengMei").show();
+        }
+        $(".MengMei").click(function () {
+            $(".ChooseView").removeClass("MusicBoxSize");
+            setTimeout(() => {
+                //---------------------------------------Start---表格渲染区-----------------------------------------//
+                let Nt = laytable.render({
+                    elem: '#MusicList',
+                    cols: [[
+                        { type: 'numbers', title: '序号' },
+                        { field: 'MusicName', title: '音乐名称', align: 'center', },
+                        { field: 'Singer', title: '歌手', align: 'center', },
+                        { templet: MusicState, title: '操作', align: 'center', },
+                        { field: 'ImportTime', title: '导入时间', align: 'center', },
+                    ]],
+                    page: {
+                        limit: 14,
+                        limits: [14],
+                    }
+                })
+                function MusicState(data) {
+                    let str = '<span class="StateRow"><span class="state"><i class="StateIcon playicon" onclick="PlayIndex(' + data.LAY_TABLE_INDEX + ')">&#9658;</i></span>';
+                    if (data.LoveMusic) {
+                        str += '<span class="state"><i class="StateIcon loveicon red" onclick="LoveThis(' + data.LAY_TABLE_INDEX + ')">&#10084;</i></span>';
+                    } else {
+                        str += '<span class="state"><i class="StateIcon loveicon" onclick="LoveThis(' + data.LAY_TABLE_INDEX + ')">&#10084;</i></span>';
+                    }
+                    if (data.StoreMusic) {
+                        str += '<span class="state"><i class="StateIcon storeicon yellow" onclick="StoreThis(' + data.LAY_TABLE_INDEX + ')">&#9733;</i></span>';
+                    } else {
+                        str += '<span class="state"><i class="StateIcon storeicon" onclick="StoreThis(' + data.LAY_TABLE_INDEX + ')">&#9733;</i></span>';
+                    }
+                    str += '<span class="state"><i class="StateIcon recoveryicon" onclick="RemoveThis(' + data.LAY_TABLE_INDEX + ')">&#9986;</i></span></span>';
+                    return str;
+                }
+                ReloadTable("GetMusicList", 0);
+                //根据所选获取表格数据
+                $(".choose").click(function () {
+                    $(this).addClass("NowC");
+                    $(this).siblings().removeClass("NowC");
+                })
+                function ReloadTable(url, listtype) {
+                    laytable.reload('MusicList', {
+                        url: url,
+                        where: {
+                            ListType: listtype,
+                        },
+                        page: {
+                            curr: 1,
+                        }
+                    });
+                    GetMusicList(listtype);
+                };
+                //根据所选获取该选择包含所有音乐
+                function GetMusicList(listtype) {
+                    let strurl
+                    if (listtype >= 3) {
+                        strurl = "RmMusicLIst";
+                    } else {
+                        strurl = "MusicList";
+                    }
+                    let xhr = new XMLHttpRequest();
+                    let fdata = new FormData();
+                    fdata.append("ListType", listtype);
+                    xhr.open("POST", strurl);
+                    xhr.responseType = "json";
+                    xhr.onload = function (e) {
+                        if (this.status == 200) {
+                            PlayerList = this.response;
+                            layer.msg("已生成播放列表");
+                        } else {
+                            layer.alert("请求失败");
+                        }
+                    };
+                    xhr.send(fdata);
+                }
+                //---------------------------------------End---表格渲染区-----------------------------------------//
+            }, 500);
+            $(".MengMei").hide();
+        })
+        //---------------------------------------End---App大小-----------------------------------------//
+    </script>
+</body>
+</html>
