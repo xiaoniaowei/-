@@ -1,0 +1,11 @@
+public class GetMusicData
+    {
+        public string MusicName { get; set; }
+        public string MusicType { get; set; }
+        public bool LoveMusic { get; set; }
+        public bool StoreMusic { get; set; }
+        public bool RecoveryMusic { get; set; }
+        public string ImportTime { get; set; }
+        public string Singer { get; set; }
+        public string MusicUrl { get; set; }
+    }
